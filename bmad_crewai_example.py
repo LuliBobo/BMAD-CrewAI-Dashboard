@@ -1,7 +1,11 @@
 import os
 import warnings
+from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
+
+# Načítanie premenných prostredia zo súboru .env (bezpečnostné opatrenie)
+load_dotenv()
 
 # Skrytie varovaní o Pydantic a staršej verzii Pythonu 3.9 (urllib3/google_api_core)
 warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
@@ -11,8 +15,10 @@ warnings.filterwarnings("ignore", module="urllib3")
 # ==========================================
 # NASTAVENIE: Vložte svoj OpenAI API Kľúč
 # ==========================================
-# Ak používate iný LLM, upravte inicializáciu ChatOpenAI podľa dokumentácie langchain/crewai
-os.environ["OPENAI_API_KEY"] = "VÁŠ_OPENAI_API_KĽÚČ_TU"
+# Vytvorte si súbor .env v zložke tohto projektu a do neho vložte: OPENAI_API_KEY=sk-...
+if not os.environ.get("OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY") == "VÁŠ_OPENAI_API_KĽÚČ_TU":
+    print("⚠️ UPOZORNENIE: Chýba OpenAI API Kľúč. Vytvorte v tomto adresári súbor '.env' a zadefinujte doň 'OPENAI_API_KEY=sk-...'.")
+    exit(1)
 
 # Explicitne inicializujeme LLM (odporúčaný prístup v novšom CrewAI)
 # Používame gpt-4o-mini pre úsporu nákladov, prípadne gpt-4o pre lepšie uvažovanie
@@ -210,13 +216,10 @@ bmad_crew = Crew(
 
 print("🚀 SPÚŠŤAM BMAD TÍM: Orchestrator začína pracovať...\n")
 
-if os.environ["OPENAI_API_KEY"] == "VÁŠ_OPENAI_API_KĽÚČ_TU":
-    print("⚠️ UPOZORNENIE: Pred spustením tohto skriptu si prosím vložte svoj reálny OpenAPI kľúč na riadok 8.")
-else:
-    # Spustenie procesu
-    result = bmad_crew.kickoff()
-    
-    print("====================================")
-    print("🎉 VÝSLEDNÝ KOÓD OD BMAD TÍMU 🎉")
-    print("====================================")
-    print(result)
+# Spustenie procesu
+result = bmad_crew.kickoff()
+
+print("====================================")
+print("🎉 VÝSLEDNÝ KOÓD OD BMAD TÍMU 🎉")
+print("====================================")
+print(result)
