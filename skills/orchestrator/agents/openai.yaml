@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator"
+  short_description: "Smeruj BMAD prácu na správneho agenta."
+  default_prompt: "Použi $orchestrator na vyhodnotenie požiadavky, výber najvhodnejšieho BMAD agenta a prípravu stručného handoffu s akceptačnými kritériami."

@@ -1,0 +1,162 @@
+[
+  {
+    "prompt": "Ktory agent mam pouzit na tento task?",
+    "expected_primary_agent": "Orchestrator"
+  },
+  {
+    "prompt": "Nasmeruj to na spravny workflow",
+    "expected_primary_agent": "Orchestrator"
+  },
+  {
+    "prompt": "Potrebujem analyzu problemu a varianty riesenia",
+    "expected_primary_agent": "Analyst"
+  },
+  {
+    "prompt": "Sprav discovery pre novy modul",
+    "expected_primary_agent": "Analyst"
+  },
+  {
+    "prompt": "Pomoz mi doplnit PRD a uspesne kriteria",
+    "expected_primary_agent": "Product Manager (PM)"
+  },
+  {
+    "prompt": "Definuj potreby pouzivatelov pre roadmapu",
+    "expected_primary_agent": "Product Manager (PM)"
+  },
+  {
+    "prompt": "Navrhni pouzivatelsky tok pre onboarding",
+    "expected_primary_agent": "UX Designer"
+  },
+  {
+    "prompt": "Potrebujem wireframe obrazovky",
+    "expected_primary_agent": "UX Designer"
+  },
+  {
+    "prompt": "Priprav ADR a navrh systemu",
+    "expected_primary_agent": "Architect"
+  },
+  {
+    "prompt": "Posud technicke obmedzenia architektury",
+    "expected_primary_agent": "Architect"
+  },
+  {
+    "prompt": "Rozpis mi epiky a user stories do sprintu",
+    "expected_primary_agent": "Scrum Master (SM)"
+  },
+  {
+    "prompt": "Urob planovanie sprintu a backlog",
+    "expected_primary_agent": "Scrum Master (SM)"
+  },
+  {
+    "prompt": "Implementuj feature pre prihlasenie",
+    "expected_primary_agent": "Developer (Dev)"
+  },
+  {
+    "prompt": "Napis kod pre export reportu",
+    "expected_primary_agent": "Developer (Dev)"
+  },
+  {
+    "prompt": "Priprav testovaci plan a regresne testy",
+    "expected_primary_agent": "QA / Quinn"
+  },
+  {
+    "prompt": "Zvys pokrytie testov automatizaciou",
+    "expected_primary_agent": "QA / Quinn"
+  },
+  {
+    "prompt": "Sprav code review tohto PR",
+    "expected_primary_agent": "Code Reviewer"
+  },
+  {
+    "prompt": "Skontroluj kod podla standardov",
+    "expected_primary_agent": "Code Reviewer"
+  },
+  {
+    "prompt": "Urob refaktoring a vycisti kod",
+    "expected_primary_agent": "Refactorer"
+  },
+  {
+    "prompt": "Zniz technicky dlh v module",
+    "expected_primary_agent": "Refactorer"
+  },
+  {
+    "prompt": "Nastav CI/CD pipeline a nasadenie",
+    "expected_primary_agent": "Release/DevOps Agent"
+  },
+  {
+    "prompt": "Priprav deploy na produkciu",
+    "expected_primary_agent": "Release/DevOps Agent"
+  },
+  {
+    "prompt": "Dopln technicku dokumentaciu a changelog",
+    "expected_primary_agent": "Tech Writer / Documentarian"
+  },
+  {
+    "prompt": "Priprav release notes",
+    "expected_primary_agent": "Tech Writer / Documentarian"
+  },
+  {
+    "prompt": "Aktualizuj project-context.md",
+    "expected_primary_agent": "Project Context Curator"
+  },
+  {
+    "prompt": "Synchronizuj projektovy kontext s kodom",
+    "expected_primary_agent": "Project Context Curator"
+  },
+  {
+    "prompt": "Zorganizuj retrospektivu po sprinte",
+    "expected_primary_agent": "Retrospective Facilitator"
+  },
+  {
+    "prompt": "Zapis lessons learned",
+    "expected_primary_agent": "Retrospective Facilitator"
+  },
+  {
+    "prompt": "Sprav hlbsi trhovy vyskum konkurencie",
+    "expected_primary_agent": "Researcher"
+  },
+  {
+    "prompt": "Porovnaj technologie pre backend",
+    "expected_primary_agent": "Researcher"
+  },
+  {
+    "prompt": "Zarovnaj funkcionality s biznis cielmi",
+    "expected_primary_agent": "Business Strategist"
+  },
+  {
+    "prompt": "Priprav go-to-market strategiu",
+    "expected_primary_agent": "Business Strategist"
+  },
+  {
+    "prompt": "Spust brainstorming napadov na novy produkt",
+    "expected_primary_agent": "Idea Coach / Brainstorming Coach"
+  },
+  {
+    "prompt": "Pomoz s generovanim napadov",
+    "expected_primary_agent": "Idea Coach / Brainstorming Coach"
+  },
+  {
+    "prompt": "Vytvor quick spec pre malu zmenu",
+    "expected_primary_agent": "Quick-Spec Agent"
+  },
+  {
+    "prompt": "Napis kratku specifikaciu zmeny",
+    "expected_primary_agent": "Quick-Spec Agent"
+  },
+  {
+    "prompt": "Sprav quick dev implementaciu teraz",
+    "expected_primary_agent": "Quick-Dev Agent"
+  },
+  {
+    "prompt": "Urob ad hoc implementaciu malej zmeny",
+    "expected_primary_agent": "Quick-Dev Agent"
+  },
+  {
+    "prompt": "Je tu zmena smeru, preplanuj sprint",
+    "expected_primary_agent": "Correct-Course Agent"
+  },
+  {
+    "prompt": "Potrebujem korekciu smeru pocas sprintu",
+    "expected_primary_agent": "Correct-Course Agent"
+  }
+]

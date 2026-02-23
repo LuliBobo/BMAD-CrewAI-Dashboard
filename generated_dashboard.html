@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-color: #030408;
+            --card-border: #216ce6;
+            --card-bg: rgba(6, 21, 55, 0.4);
+            --card-shadow: 0 0 40px rgba(33, 108, 230, 0.15);
+            --text-main: #ffffff;
+            --text-sub: #7eaaf0;
+            --glow: #061e57;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 30%, var(--glow) 0%, transparent 50%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 24px 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #5d6f8f;
+        }
+
+        .hero {
+            text-align: center;
+            margin-top: 40px;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 82px;
+            letter-spacing: -2px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-sub);
+            margin: 20px 0 40px;
+            font-weight: 400;
+        }
+
+        .search-bar {
+            position: relative;
+            max-width: 540px;
+            margin: 0 auto 80px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 16px 24px 16px 50px;
+            border-radius: 40px;
+            background: rgba(10, 20, 40, 0.3);
+            border: 1px solid rgba(126, 170, 240, 0.2);
+            color: var(--text-main);
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar input::placeholder {
+            color: #5d6f8f;
+        }
+
+        .search-bar input:focus {
+            border-color: rgba(126, 170, 240, 0.6);
+            box-shadow: 0 0 15px rgba(33, 108, 230, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5d6f8f;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 300px;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .card {
+            width: 250px;
+            height: 250px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: absolute;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:nth-child(1) {
+            transform: translate(-340px, -20px);
+            z-index: 1;
+        }
+
+        .card:nth-child(2) {
+            transform: translate(-100px, 20px);
+            z-index: 3;
+            width: 270px;
+            height: 270px;
+            box-shadow: 0 0 50px rgba(33, 108, 230, 0.4);
+        }
+
+        .card:nth-child(3) {
+            transform: translate(140px, -10px);
+            z-index: 2;
+        }
+
+        .card:nth-child(4) {
+            transform: translate(360px, 30px);
+            z-index: 4;
+            width: 260px;
+            height: 260px;
+        }
+
+        .card:hover {
+            transform: scale(1.05) translateY(-5px) !important;
+            z-index: 10 !important;
+            box-shadow: 0 0 60px rgba(33, 108, 230, 0.6) !important;
+            cursor: pointer;
+        }
+
+        .card-icon {
+            color: var(--card-border);
+            margin-bottom: 24px;
+        }
+
+        .card-icon svg {
+            width: 42px;
+            height: 42px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+
+        @media (max-width: 1024px) {
+            .cards-container {
+                position: static;
+                height: auto;
+                flex-wrap: wrap;
+                width: 90%;
+            }
+
+            .card {
+                position: static;
+                transform: none !important;
+                width: calc(50% - 20px) !important;
+                height: 220px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 56px;
+            }
+
+            .card {
+                width: 100% !important;
+                margin-bottom: 20px;
+            }
+
+            .search-bar {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#ff4d4f" />
+                <path d="M2 17L12 22L22 17" stroke="#4ade80" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M2 12L12 17L22 12" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            Sales Dashboard
+        </div>
+        <div class="theme-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>Sales Data</h1>
+        <div class="subtitle">
+            A new perspective on performance for the modern era.<br>
+            Real-time analytics, always up-to-date.
+        </div>
+
+        <div class="search-bar">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" placeholder="Find open metrics...">
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <!-- Card 1: Total Sales -->
+        <div class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+            </div>
+            <div class="metric-value">$12,450</div>
+            <div class="metric-label">Total Sales</div>
+        </div>
+
+        <!-- Card 2: New Leads -->
+        <div class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+            </div>
+            <div class="metric-value">342</div>
+            <div class="metric-label">New Leads</div>
+        </div>
+
+        <!-- Card 3: Conversion Rate -->
+        <div class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            <div class="metric-value">12.4%</div>
+            <div class="metric-label">Conversion Rate</div>
+        </div>
+
+        <!-- Card 4: Active Users -->
+        <div class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+            </div>
+            <div class="metric-value">1,200</div>
+            <div class="metric-label">Active Users</div>
+        </div>
+    </div>
+
+</body>
+
+</html>

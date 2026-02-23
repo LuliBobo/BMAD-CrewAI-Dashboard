@@ -1,0 +1,4 @@
+interface:
+  display_name: "Support / Help Agent"
+  short_description: "Vysvetli BMAD workflow a dalsie kroky."
+  default_prompt: "Pouzi $support-help-agent na vysvetlenie, ktory BMAD workflow alebo agent je najlepsia dalsia volba, a navrhni konkretne dalsie kroky."
