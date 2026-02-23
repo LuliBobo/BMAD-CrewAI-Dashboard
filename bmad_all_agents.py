@@ -1,4 +1,5 @@
 import os
+import sys
 import warnings
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process
@@ -181,7 +182,13 @@ support_agent = Agent(
 # 3. MASSIVE TASK CHAIN (The Startup Flow) - Hierarchical
 # ==========================================
 
+# Predvolený nápad, ak je skript spustený bez argumentu
 startup_idea = "Chcem vytvoriť digitálnu SaaS platformu, ktorá pomocou AI automaticky organizuje dokumenty v právnických firmách."
+
+# Ak zachytíme argument z príkazového riadku (frontendu), prepíšeme nápad
+if len(sys.argv) > 1:
+    startup_idea = sys.argv[1]
+    print(f"⚡ ZACHYTENÝ NOVÝ NÁPAD OD POUŽÍVATEĽA: '{startup_idea}'\n")
 
 # Removed "agent=..." because in hierarchical process, the manager decides who takes which task!
 tasks = [

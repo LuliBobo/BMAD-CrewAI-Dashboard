@@ -239,6 +239,47 @@
                 width: 90%;
             }
         }
+
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(3, 4, 8, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(126, 170, 240, 0.3);
+            border-top-color: var(--card-border);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #statusMessage {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #4ade80;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.5;
+        }
     </style>
 </head>
 
@@ -263,10 +304,10 @@
     </header>
 
     <div class="hero">
-        <h1>Sales Data</h1>
+        <h1>Command Center</h1>
         <div class="subtitle">
             A new perspective on performance for the modern era.<br>
-            Real-time analytics, always up-to-date.
+            Enter your idea below to summon the 21-Agent BMAD AI Team.
         </div>
 
         <div class="search-bar">
@@ -275,7 +316,7 @@
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" placeholder="Find open metrics...">
+            <input type="text" id="ideaInput" placeholder="Zadajte inovatívny nápad na startup a stlačte Enter...">
         </div>
     </div>
 
@@ -329,6 +370,55 @@
         </div>
     </div>
 
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h2>Prebúdzam 21 BMAD Agentov...</h2>
+        <div class="subtitle">Proces štartuje na serveri. Sledujte okno terminálu pre živý prenos.</div>
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        const ideaInput = document.getElementById('ideaInput');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const statusMessage = document.getElementById('statusMessage');
+
+        ideaInput.addEventListener('keypress', async function (e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                const idea = this.value.trim();
+
+                // Show loading overlay
+                loadingOverlay.style.display = 'flex';
+                statusMessage.innerHTML = 'Odosielam zadanie na BMAD Flask Server...';
+
+                try {
+                    const response = await fetch('/api/run-crew', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ idea: idea })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        statusMessage.innerHTML = '✅ <br>' + data.message;
+                        ideaInput.value = '';
+                        // Zmizne po 6 sekundách
+                        setTimeout(() => {
+                            loadingOverlay.style.display = 'none';
+                        }, 6000);
+                    } else {
+                        statusMessage.innerHTML = '❌ Chyba: ' + (data.error || 'Neznáma chyba');
+                        setTimeout(() => { loadingOverlay.style.display = 'none'; }, 4000);
+                    }
+                } catch (error) {
+                    statusMessage.innerHTML = '❌ Sieťová chyba: Skontrolujte či beží Backend Server.';
+                    setTimeout(() => { loadingOverlay.style.display = 'none'; }, 4000);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
