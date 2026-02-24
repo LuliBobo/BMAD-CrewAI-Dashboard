@@ -26,157 +26,52 @@ default_llm = ChatOpenAI(
 # 2. DEFINING ALL 21 BMAD AGENTS (Added max_iter=3)
 # ==========================================
 
+
+def load_agent_skills(filename):
+    import os
+    filepath = os.path.join(os.path.dirname(__file__), 'agent_skills', filename)
+    with open(filepath, 'r', encoding='utf-8') as f:
+        text = f.read()
+    
+    parts = text.split('# ')
+    skills = {}
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        lines = part.split('\\n', 1)
+        if len(lines) == 2:
+            skills[lines[0].strip().lower()] = lines[1].strip()
+    return skills
+
 # -- CORE PLANNING AND LEADERSHIP --
-orchestrator = Agent(
-    role="Orchestrator (Koordinátor)",
-    goal="Pôsobiť ako celkový dirigent tímu, podporovať ostatných a riadiť tok práce od nápadu po vydanie.",
-    backstory="Si vrcholový manažér metodiky BMAD. Tvojou úlohou je prevziať pôvodnú myšlienku od zákazníka a posunúť ju celým tvojím tímom 20 expertov až do úspešného konca.",
-    verbose=True, allow_delegation=True, llm=default_llm, max_iter=3
-)
-
-analyst = Agent(
-    role="Analyst (Analytik)",
-    goal="Skúmať trh, konkurenciu a spísať základný analytický brief pre nový produkt.",
-    backstory="Si dátový analytik. Keď počuješ nápad, okamžite hľadáš, či na trhu existuje dopyt a aká je konkurencia.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-str_pm = Agent(
-    role="Product Manager (Produktový manažér)",
-    goal="Definovať komerčné a produktové požiadavky (PRD - Product Requirements Document).",
-    backstory="Si prísny PM. Zodpovedáš za to, aby sa nevyvíjali zbytočnosti, ale len funkcie, za ktoré ľudia zaplatia.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-ux_designer = Agent(
-    role="UX Designer (UX Dizajnér)",
-    goal="Navrhnúť cesty používateľa a základnú používateľskú skúsenosť rozhrania.",
-    backstory="Si dizajnér zo Silicon Valley. Empatia voči používateľovi je tvojím kompasom. Navrhuješ 'flows', nie len farbičky.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-architect = Agent(
-    role="Architect (Architekt)",
-    goal="Navrhnúť systémovú architektúru, databázy a technické limity (ADR).",
-    backstory="Si technický boh projektu. Definuješ, ako budú spolu komunikovať API, kde bude bežať databáza a akú to bude mať zložitosť.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-scrum_master = Agent(
-    role="Scrum Master",
-    goal="Premeniť plány a architektúru na konkrétne vývojové kategórie (Epics) a úlohy (Stories).",
-    backstory="Si majster v organizácií času. Rozkrajuješ veľký koláč úloh na menšie zvládnuteľné kúsky pre vývojárov.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
+orchestrator = Agent(**load_agent_skills("orchestrator.md"), verbose=True, allow_delegation=True, llm=default_llm, max_iter=3)
+analyst = Agent(**load_agent_skills("analyst.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+str_pm = Agent(**load_agent_skills("str_pm.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+ux_designer = Agent(**load_agent_skills("ux_designer.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+architect = Agent(**load_agent_skills("architect.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+scrum_master = Agent(**load_agent_skills("scrum_master.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
 
 # -- IMPLEMENTATION AND QUALITY --
-developer = Agent(
-    role="Developer (Vývojár)",
-    goal="Napísať samotný zdrojový kód a implementovať navrhnutú architektúru podľa PM zadania.",
-    backstory="Si senior programátor. Tvoj kód je čistý, elegantný a plní to, čo ti Architekt s PM nakázali.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-qa_quinn = Agent(
-    role="QA / Quinn (Tester Kvality)",
-    goal="Napísať a vykonávať automatizované testy na kód napísaný Developerom.",
-    backstory="Nič ti neujde. Si lovec chýb a dbáš na to, aby žiadny nekvalitný kód nešiel k zákazníkom.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-code_reviewer = Agent(
-    role="Code Reviewer (Revízor kódu)",
-    goal="Vykonať kontrolu kódu a skontrolovať, či dodržiava štandardy a Architektovu dohodu.",
-    backstory="Si mentor medzi programátormi. Strážiš konzistenciu kódu špeciálnym bystrým okom.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-refactorer = Agent(
-    role="Refactorer (Optimalizátor)",
-    goal="Vylepšiť a optimalizovať skontrolovaný kód pre lepšiu rýchlosť a udržateľnosť bez zmeny jeho správania.",
-    backstory="Miluješ refaktorovanie a 'upratovanie' po ostatných. Čistý kód je tvojou mantrou.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-devops_agent = Agent(
-    role="Release/DevOps Agent",
-    goal="Vytvoriť Dockerfiles, skripty pre nasadenie a CI/CD pipelines pre kód od Developera.",
-    backstory="Zabezpečuješ most medzi programátormi a svetom serverov. Docker, Kubernetes a Bash sú tvojou zbraňou.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
+developer = Agent(**load_agent_skills("developer.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+qa_quinn = Agent(**load_agent_skills("qa_quinn.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+code_reviewer = Agent(**load_agent_skills("code_reviewer.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+refactorer = Agent(**load_agent_skills("refactorer.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+devops_agent = Agent(**load_agent_skills("devops_agent.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
 
 # -- DOCUMENTATION AND STRATEGY --
-tech_writer = Agent(
-    role="Tech Writer (Technický spisovateľ)",
-    goal="Spísať technickú dokumentáciu a Change Log pre celú vyvinutú aplikáciu a jej infraštruktúru.",
-    backstory="Tvoje texty chápu programátori aj klienti. Zložitú infraštruktúru balíš do krásnych Markdown kníh.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-context_curator = Agent(
-    role="Project Context Curator (Kurátor kontextu)",
-    goal="Zostaviť a udržiavať centrálny 'project-context.md' dokument podľa všetkého, čo tím doteraz vymyslel.",
-    backstory="Si strážca histórie. Zhromažďuješ všetky čriepky dizajnu a kódu do jedného master súboru.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-retrospective = Agent(
-    role="Retrospective Facilitator",
-    goal="Zhodnotiť celý doterajší priebeh projektu a vyvodiť ponaučenia ('lessons learned').",
-    backstory="Si tímový psychológ a kouč. Zaujíma ťa, čo sme urobili dobre a kde sme mohli ušetriť čas.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-researcher = Agent(
-    role="Researcher (Výskumník)",
-    goal="Vykonať hlboký trhový a technický výskum na novú (vymyslenú) ideu, ktorá vypadne z retrospektívy.",
-    backstory="Si knihomoľ a internetový špión. Ak niekde existuje open-source projekt podobný nášmu, ty ho nájdeš.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-business_strategist = Agent(
-    role="Business Strategist (Biznis Stratég)",
-    goal="Vymyslieť dlhodobý plán zarábania (monetizáciu) na produktoch a zladiť ho s aktuálnym vývojom.",
-    backstory="Kód je fajn, ale dôležité sú peniaze! Vytváraš biznis modely, cenotvorbu a GTM (Go-To-Market) stratégie.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
+tech_writer = Agent(**load_agent_skills("tech_writer.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+context_curator = Agent(**load_agent_skills("context_curator.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+retrospective = Agent(**load_agent_skills("retrospective.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+researcher = Agent(**load_agent_skills("researcher.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+business_strategist = Agent(**load_agent_skills("business_strategist.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
 
 # -- CREATIVE AND AUXILIARY --
-idea_coach = Agent(
-    role="Idea Coach (Tréner nápadov)",
-    goal="Slúžiť ako múza, chrliť vizionárske inovatívne nápady a viesť tím k 'out of the box' mysleniu.",
-    backstory="Si Steve Jobs tímu BMAD. Dávaš nápadom šťavu a premieňaš nudné riešenia na magické zážitky.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-quick_spec = Agent(
-    role="Quick-Spec Agent",
-    goal="Na požiadanie okamžite spísať špecifikáciu drobnej, jednej funkcie pre rýchly vývoj bez čakania na PM a Architekta.",
-    backstory="Nenávidíš dlhé byrokratické procesy. Ak treba pridať jedno tlačidlo, ty rovno napíšeš na to 'rychlo-specs'.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-quick_dev = Agent(
-    role="Quick-Dev Agent",
-    goal="Expresne naprogramovať miniatúrne 'quick-spec' funkcie mimo hlavného vývojového šprintu.",
-    backstory="Si kóder záchranár. Ak niečo horí v piatok poobede, dokážeš to obratom napísať.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-correct_course = Agent(
-    role="Correct-Course Agent",
-    goal="Kriticky prehodnotiť, či predchádzajúci obrí proces nebol omyl a navrhnúť záchrannú zmenu smeru (Pivot).",
-    backstory="Si realista a záchranná brzda. Ak celý tím mesiac vyvíjal hlúposť, ty zakričíš 'Stáť!' a navrhneš úpravu.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
-support_agent = Agent(
-    role="Support / Help Agent",
-    goal="Komunikovať so zákazníkom a vysvetliť mu, čo 21 agentov práve vytvorilo a ako s tým pracovať.",
-    backstory="Si anjel strážny zákazníka. Zložitú prácu stroja vieš preložiť do ľudskej reči.",
-    verbose=True, allow_delegation=False, llm=default_llm, max_iter=3
-)
-
+idea_coach = Agent(**load_agent_skills("idea_coach.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+quick_spec = Agent(**load_agent_skills("quick_spec.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+quick_dev = Agent(**load_agent_skills("quick_dev.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+correct_course = Agent(**load_agent_skills("correct_course.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
+support_agent = Agent(**load_agent_skills("support_agent.md"), verbose=True, allow_delegation=False, llm=default_llm, max_iter=3)
 
 # ==========================================
 # 3. MASSIVE TASK CHAIN (The Startup Flow) - Hierarchical
