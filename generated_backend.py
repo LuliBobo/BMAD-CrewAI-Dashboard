@@ -1,8 +1,21 @@
 from flask import Flask, jsonify, render_template, request
 import sqlite3
 import subprocess
+import re
+import threading
 
 app = Flask(__name__)
+
+# Mutex Lock for preventing multiple overlapping CrewAI runs
+crew_lock = threading.Lock()
+
+# Globálny middleware pre bezpečnostné HTTP hlavičky
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Content-Security-Policy'] = "default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com"
+    return response
 
 # Initialize SQLite database
 def init_db():
@@ -42,17 +55,33 @@ def run_crew():
     if not idea:
         return jsonify({"error": "Nezadali ste žiaden nápad. Prosím vyplňte vyhľadávacie pole."}), 400
     
+    # Bezpečnostná kontrola dĺžky (prevencia pretečenia a DoS)
+    if len(idea) > 1000:
+         return jsonify({"error": "Prekročili ste povolenú dĺžku zadania 1000 znakov."}), 400
+         
+    # Sanitizácia voči Command Injection (povolené len bežné znaky a vymazanie shell metaznakov)
+    sanitized_idea = re.sub(r'[;|&$`\n]', ' ', idea)
+    
+    # Rate Limiting & Mutex zámok (zamedzenie SPAMU)
+    if not crew_lock.acquire(blocking=False):
+        return jsonify({"error": "429 Too Many Requests: Systém BMAD už práve teraz spracúva inú úlohu. Počkajte na dokončenie."}), 429
+
     try:
         # Spustenie scriptu na pozadí (neblokuje request)
-        # Preposielame `idea` ako argument pre `sys.argv[1]`
+        # Preposielame čistý `sanitized_idea` ako argument pre `sys.argv[1]`
         subprocess.Popen(
-            ["python3", "bmad_all_agents.py", idea],
+            ["python3", "bmad_all_agents.py", sanitized_idea],
             cwd="/Users/macbookprosukromne/Documents/BMAD"
         )
+        # Uvoľnenie zámku by normálne prebehlo až po dobehnutí, no kedže používame Popen (Asynchrónne), 
+        # nastavíme zámku Timer na 5 minút, aby sa zamedzilo spamovaniu v tomto okne
+        threading.Timer(300.0, crew_lock.release).start()
+        
         return jsonify({
             "message": "BMAD 21-Agent Tím bol úspešne prebudený a naštartovaný! Sledujte terminál pre živý prenos. Výsledok sa uloží do súboru THE_ULTIMATE_HIERARCHICAL_STARTUP.md"
         }), 200
     except Exception as e:
+        crew_lock.release()
         return jsonify({"error": str(e)}), 500
 
 # API endpoint to get metrics
