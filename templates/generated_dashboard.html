@@ -304,6 +304,10 @@
     </div>
 
     <div class="floating-agents-container" id="agentsContainer">
+        <!-- SVG Canvas pre hierarchické čiary (závislosti) -->
+        <svg id="connectionsSvg" width="100%" height="100%"
+            style="position: absolute; top: 0; left: 0; z-index: 0; overflow: visible; pointer-events: none;"></svg>
+
         <!-- Agenti budú dynamicky generovaní cez JavaScript -->
     </div>
 
@@ -439,6 +443,47 @@
             badge.style.zIndex = Math.floor(100 - agent.pos.t);
 
             container.appendChild(badge);
+        });
+
+        // Vykreslenie organizačných čiar (prepojení) pomocou SVG
+        const connections = [
+            // Orchestrator riadi hlavný manažment
+            { from: 0, to: 1 }, { from: 0, to: 2 }, { from: 0, to: 4 },
+            // PM riadi dizajn a stratégiu
+            { from: 2, to: 3 }, { from: 2, to: 5 }, { from: 2, to: 15 }, { from: 2, to: 16 },
+            // Architekt riadi IT exekutívu
+            { from: 4, to: 6 }, { from: 4, to: 10 }, { from: 4, to: 18 },
+            // Scrum Master riadi kvalitu kódu a refaktoring
+            { from: 5, to: 7 }, { from: 5, to: 8 }, { from: 5, to: 9 },
+            // Developer komunikuje s dokumentáciou a QA
+            { from: 6, to: 11 }, { from: 6, to: 12 },
+            // Ostatní sa viažu hlbšie
+            { from: 1, to: 14 }, // Analytik a Výskumník
+            { from: 1, to: 17 }, // Analytik a Rýchle špecifikácie
+            { from: 5, to: 13 }, // Scrum -> Retrospektíva
+            { from: 0, to: 19 }, // Orchestrator -> Korekcia kurzu
+            { from: 0, to: 20 }  // Orchestrator -> Support
+        ];
+
+        const svg = document.getElementById('connectionsSvg');
+
+        connections.forEach(conn => {
+            const aFrom = agentsData[conn.from];
+            const aTo = agentsData[conn.to];
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            // Výpočet pozícií: Y + 3% kvôli stredu okienka
+            line.setAttribute('x1', aFrom.pos.l + '%');
+            line.setAttribute('y1', (aFrom.pos.t + 3) + '%');
+            line.setAttribute('x2', aTo.pos.l + '%');
+            line.setAttribute('y2', (aTo.pos.t + 3) + '%');
+
+            // Atribúty pre vizuál čiary
+            line.setAttribute('stroke', 'rgba(126, 170, 240, 0.25)'); // Priesvitná modrá
+            line.setAttribute('stroke-width', '1.5');
+            line.setAttribute('stroke-dasharray', '5, 5'); // Čiarkovaná čiara
+
+            svg.appendChild(line);
         });
     </script>
 </body>
