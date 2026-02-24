@@ -165,6 +165,46 @@
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
         }
 
+        .agent-tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(3, 4, 8, 0.95);
+            border: 1px solid rgba(126, 170, 240, 0.4);
+            color: #d1e0f9;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 400;
+            width: 220px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            pointer-events: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 200;
+        }
+
+        /* Šípka tooltipu nadol */
+        .agent-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: rgba(126, 170, 240, 0.4) transparent transparent transparent;
+        }
+
+        .agent-badge:hover .agent-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
         @keyframes float-agent {
             0% {
                 transform: translateY(0px) rotate(0deg);
@@ -317,27 +357,27 @@
         });
         // Floating Agents Generation Logic
         const agentsData = [
-            { name: "Orchestrator", icon: "🧠" },
-            { name: "Analyst", icon: "📊" },
-            { name: "Product Manager", icon: "👔" },
-            { name: "UX Designer", icon: "🎨" },
-            { name: "Architect", icon: "📐" },
-            { name: "Scrum Master", icon: "⏱️" },
-            { name: "Developer", icon: "💻" },
-            { name: "QA / Quinn", icon: "🐛" },
-            { name: "Code Reviewer", icon: "🔍" },
-            { name: "Refactorer", icon: "🧹" },
-            { name: "Release/DevOps Agent", icon: "🚀" },
-            { name: "Tech Writer", icon: "📝" },
-            { name: "Project Context Curator", icon: "🗂️" },
-            { name: "Retrospective Facilitator", icon: "🔄" },
-            { name: "Researcher", icon: "🔬" },
-            { name: "Business Strategist", icon: "💼" },
-            { name: "Idea Coach", icon: "💡" },
-            { name: "Quick-Spec Agent", icon: "⚡" },
-            { name: "Quick-Dev Agent", icon: "🏃" },
-            { name: "Correct-Course Agent", icon: "⚓" },
-            { name: "Support / Help Agent", icon: "🎧" }
+            { name: "Orchestrator", icon: "🧠", enDesc: "Acts as the overall team director and manages the workflow." },
+            { name: "Analyst", icon: "📊", enDesc: "Researches the market, competitors, and writes the analytical brief." },
+            { name: "Product Manager", icon: "👔", enDesc: "Defines commercial requirements (PRD) and success metrics." },
+            { name: "UX Designer", icon: "🎨", enDesc: "Designs user journeys and core user experience interfaces." },
+            { name: "Architect", icon: "📐", enDesc: "Designs system architecture, databases, and technical constraints." },
+            { name: "Scrum Master", icon: "⏱️", enDesc: "Translates plans into specific development epics and sprints." },
+            { name: "Developer", icon: "💻", enDesc: "Writes the actual source code and implements the architecture." },
+            { name: "QA / Quinn", icon: "🐛", enDesc: "Writes and executes automated tests on the generated code." },
+            { name: "Code Reviewer", icon: "🔍", enDesc: "Conducts code reviews to ensure standards compliance." },
+            { name: "Refactorer", icon: "🧹", enDesc: "Improves and optimizes code for speed and maintainability." },
+            { name: "Release/DevOps Agent", icon: "🚀", enDesc: "Creates Dockerfiles, scripts, and deployment pipelines." },
+            { name: "Tech Writer", icon: "📝", enDesc: "Writes technical documentation and changelogs." },
+            { name: "Project Context Curator", icon: "🗂️", enDesc: "Compiles and maintains the central context document." },
+            { name: "Retrospective Facilitator", icon: "🔄", enDesc: "Evaluates project progress and extracts lessons learned." },
+            { name: "Researcher", icon: "🔬", enDesc: "Conducts deep market and technical research for new ideas." },
+            { name: "Business Strategist", icon: "💼", enDesc: "Develops monetization plans, pricing, and GTM strategies." },
+            { name: "Idea Coach", icon: "💡", enDesc: "Acts as a muse, generating visionary and innovative ideas." },
+            { name: "Quick-Spec Agent", icon: "⚡", enDesc: "Instantly writes specifications for small, single features." },
+            { name: "Quick-Dev Agent", icon: "🏃", enDesc: "Expressly programs miniature features outside the main sprint." },
+            { name: "Correct-Course Agent", icon: "⚓", enDesc: "Evaluates processes and suggests emergency course corrections." },
+            { name: "Support / Help Agent", icon: "🎧", enDesc: "Communicates with users to explain agent creations." }
         ];
 
         const container = document.getElementById('agentsContainer');
@@ -378,7 +418,10 @@
         agentsData.forEach((agent) => {
             const badge = document.createElement('div');
             badge.className = 'agent-badge';
-            badge.innerHTML = `<span class="agent-icon">${agent.icon}</span> ${agent.name}`;
+            badge.innerHTML = `
+                <span class="agent-icon">${agent.icon}</span> ${agent.name}
+                <div class="agent-tooltip">${agent.enDesc}</div>
+            `;
 
             // Assign pre-calculated hierarchical positions
             badge.style.top = agent.pos.t + '%';
