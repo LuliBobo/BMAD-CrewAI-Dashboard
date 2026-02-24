@@ -166,14 +166,28 @@
         }
 
         @keyframes float-agent {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-25px) rotate(3deg); }
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-25px) rotate(3deg);
+            }
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 56px; }
-            .floating-agents-container { height: 600px; }
-            .agent-badge { font-size: 13px; padding: 8px 16px; }
+            h1 {
+                font-size: 56px;
+            }
+
+            .floating-agents-container {
+                height: 600px;
+            }
+
+            .agent-badge {
+                font-size: 13px;
+                padding: 8px 16px;
+            }
         }
 
         #loading-overlay {
@@ -328,28 +342,59 @@
 
         const container = document.getElementById('agentsContainer');
 
+        // Hierarchical positions (Top, Left percentage relative to container)
+        // Level 1: Leadership (Top)
+        agentsData[0].pos = { t: 5, l: 45 }; // Orchestrator
+
+        // Level 2: Planners & Managers
+        agentsData[1].pos = { t: 25, l: 20 }; // Analyst
+        agentsData[2].pos = { t: 25, l: 45 }; // Product Manager
+        agentsData[4].pos = { t: 25, l: 70 }; // Architect
+
+        // Level 3: Design & Scrum
+        agentsData[3].pos = { t: 45, l: 15 }; // UX Designer
+        agentsData[5].pos = { t: 45, l: 35 }; // Scrum Master
+        agentsData[15].pos = { t: 45, l: 55 }; // Business Strategist
+        agentsData[16].pos = { t: 45, l: 75 }; // Idea Coach
+
+        // Level 4: Execution (Developers, QA, DevOps)
+        agentsData[6].pos = { t: 65, l: 10 }; // Developer
+        agentsData[7].pos = { t: 65, l: 25 }; // QA / Quinn
+        agentsData[8].pos = { t: 65, l: 40 }; // Code Reviewer
+        agentsData[9].pos = { t: 65, l: 55 }; // Refactorer
+        agentsData[10].pos = { t: 65, l: 70 }; // Release/DevOps Agent
+        agentsData[18].pos = { t: 65, l: 85 }; // Quick-Dev Agent
+
+        // Level 5: Support, Docs, Research
+        agentsData[11].pos = { t: 85, l: 5 }; // Tech Writer
+        agentsData[12].pos = { t: 85, l: 20 }; // Project Context Curator
+        agentsData[13].pos = { t: 85, l: 35 }; // Retrospective Facilitator
+        agentsData[14].pos = { t: 85, l: 50 }; // Researcher
+        agentsData[17].pos = { t: 85, l: 65 }; // Quick-Spec Agent
+        agentsData[19].pos = { t: 85, l: 80 }; // Correct-Course Agent
+        agentsData[20].pos = { t: 85, l: 95 }; // Support / Help Agent
+
+
         agentsData.forEach((agent) => {
             const badge = document.createElement('div');
             badge.className = 'agent-badge';
             badge.innerHTML = `<span class="agent-icon">${agent.icon}</span> ${agent.name}`;
-            
-            // Random positioning: X from 5% to 80%, Y from 5% to 80% to avoid overflowing too much
-            const top = 5 + Math.random() * 75; 
-            const left = 5 + Math.random() * 75; 
-            
-            badge.style.top = top + '%';
-            badge.style.left = left + '%';
-            
-            // Random animation styles
-            const duration = 4 + Math.random() * 6; // 4s to 10s
-            const delay = Math.random() * 5; // offset start
-            
+
+            // Assign pre-calculated hierarchical positions
+            badge.style.top = agent.pos.t + '%';
+            // Offset left slightly to center the badge itself based on its size
+            badge.style.left = `calc(${agent.pos.l}% - 70px)`;
+
+            // Minimal random animation styles so they still float gently
+            const duration = 4 + Math.random() * 4; // 4s to 8s
+            const delay = Math.random() * 3; // offset start
+
             badge.style.animationDuration = duration + 's';
             badge.style.animationDelay = '-' + delay + 's';
-            
-            // Random depth (z-index) so they overlap naturally
-            badge.style.zIndex = Math.floor(Math.random() * 30);
-            
+
+            // Ensure upper management stays on top of lower
+            badge.style.zIndex = Math.floor(100 - agent.pos.t);
+
             container.appendChild(badge);
         });
     </script>
