@@ -5,6 +5,34 @@ The BMAD Method ships with a full-stack AI team of 21 named agents. Each agent h
 > **💡 Note on CrewAI Environment Requirements:** 
 > When running this method via CrewAI locally on macOS with Python 3.9, you should stick to `crewai==0.1.32` and `pydantic==2.5.3`. Newer versions of `crewai` (> 0.28) use advanced `type | None` syntax, which crashes in Python 3.9. Deprecation warnings are hidden in the codebase (`bmad_crewai_example.py`) for a cleaner console experience.
 
+## 🚀 Quick Start Guide (For New Developers)
+Ak si sťahujete repozitár do nového počítača, pre naštartovanie Dashboardu a agentov postupujte takto:
+
+**Krok 1: Klonovanie a vstup do repozitára**
+```bash
+git clone https://github.com/LuliBobo/BMAD-CrewAI-Dashboard.git
+cd BMAD-CrewAI-Dashboard
+```
+
+**Krok 2: Inštalácia závislostí a knižníc**
+```bash
+pip install -r requirements.txt
+```
+
+**Krok 3: Nastavenie tajného API kľúča (.env)**
+Z bezpečnostných dôvodov projekt neobsahuje kľúče, musíte si vytvoriť vlastný podľa šablóny:
+```bash
+cp .env.example .env
+```
+Následne otvorte vytvorený súbor `.env` a doplňte do neho Váš OpenAI kľúč: \`OPENAI_API_KEY=sk-...\`
+
+**Krok 4: Spustenie Produkčného Webservera (Gunicorn)**
+Aplikácia sa automaticky rozbehne lokálne aj s UI na porte 5000:
+```bash
+./start_bmad.sh
+```
+Aplikácia následne beží na `http://127.0.0.1:5000`.
+
 ## Core Planning and Leadership Agents
 
 - **Orchestrator** - Overall conductor and help system. Routes work to the right agent and answers "how do I...?" questions.
